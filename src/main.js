@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import '../style.css'
-import m from '../style.module.css'
-console.log('m',m)
+import './styles/index.css'
+import json from './data.json'
 createApp(App).mount('#app')
