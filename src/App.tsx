@@ -1,5 +1,11 @@
+
+import { Header } from './components/Header/index';
 function App() {
-  return <div>IS App</div>
+  return (
+    <div>
+      <Header></Header>
+    </div>
+  )
 }
 
 export default App
