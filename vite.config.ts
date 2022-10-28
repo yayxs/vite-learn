@@ -5,21 +5,31 @@ import path from 'path'
 // vite plugin
 import windi from 'vite-plugin-windicss'
 
-let rootStr = process.cwd()
-
-console.log('-----', rootStr)
-
-rootStr = path.join(__dirname, 'src')
-console.log('===', rootStr)
-
 const variablePath = normalizePath(path.resolve('./src/variable.scss'))
+
+// 共享配置 root
+function createRootStr() {
+  let defaultRoot: string = process.cwd()
+  return defaultRoot
+}
+// gen plugins
+function createPlugins() {
+  const vitePlugins = [react(), windi()]
+  return vitePlugins
+}
+// 共享配置 别名
+
+function resolveAlias() {
+  let ret = {
+    '@assets': path.join(__dirname, 'src/assets')
+  }
+  return ret
+}
 export default defineConfig({
-  root: process.cwd(),
-  plugins: [react(), windi()],
+  root: createRootStr(),
+  plugins: createPlugins(),
   resolve: {
-    alias: {
-      '@assets': path.join(__dirname, 'src/assets')
-    }
+    alias: resolveAlias()
   },
   css: {
     postcss: {
@@ -33,5 +43,9 @@ export default defineConfig({
         additionalData: `@import "${variablePath}";`
       }
     }
+  },
+  optimizeDeps: {
+    // 强制预构建
+    include: ['lodash-es', 'vue']
   }
 })
