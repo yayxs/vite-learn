@@ -47,6 +47,13 @@
 - 项目冷启动递归打包整个项目的依赖树
 - JS 性能问题
 
+## Terser 的问题
+
+js 开发的压缩器
+在 webpack 或者 rollup 中作为一个 Plugin 来完成代码打包后的压缩混淆工作
+涉及大量的 AST 造成重复解析工作
+js 语言的
+
 ## 而 Vite
 
 - 被应用在大型项目中
@@ -89,10 +96,17 @@ vite 也有根目录的概念 服务文件的位置
 
 - 图片 png\jpeg\webp\avif\gif\svg
 
-css 预处理器 sass scss less stylus
-css modules 将 css 类名处理成哈希值
-css 后处理器 postcss
-css in js
+## 双引擎
+
+## ESbuild
+
+依赖预编译、TS 语法转译、代码压缩
+esbuild 不支持降级到 es5 代码
+不支持 `const enum` 语法 单独使用语法 在`esbuild` 中直接抛出
+不支持`Code Splitting`
+TS\JSX\ esbuild 转译 ts 或者 jsx 的能力通过 vite 插件提供
+生产环境下默认的压缩工具
+
 vite 底层调用 css 预处理器 vite 按需加载没有内置这些工具库
 静态资源处理：图片 JSON （本身不是模块）
 vite 中的 HMR 在原生 ESM 上执行 编辑一个文件时
@@ -100,13 +114,9 @@ vite 同时利用 http 头部来加速整个页面重新加载 源码模块的�
 嵌套的导入会导致额外的网络往返，生产环境下发布未打包的 ESM 仍然效率低下 将代码 tree-shaking 懒加载和 chunk 分割
 vite 提倡不打包的构建工具 开发时候模块按需编译 不用先打包完再加载
 
-- 源代码 业务代码 对于源代码而言
-- 第三方的依赖 node_modules 代码 vite 选择打包 esbuild 依赖编译速度
-
 vite 底层使用的构建引擎：esbuild rollup
 开发阶段的依赖预构建，需要在应用启动前进行打包并且转换为 ESM 格式
-esbuild 不支持降级到 es5 代码
-esbuild 转译 ts 或者 jsx 的能力通过 vite 插件提供
+
 替换原来的 babel 或者 tsc
 vite 用作生产环境打包的核心工具，也直接决定了 vite 插件机制的设计 vite 到底基于 rollup
 Rollup 在 vite 中的重要性不亚于 Esbuil
@@ -135,9 +145,9 @@ vite 为 Vue
 
 - [ ] css
   - [ ] 原生 css
-  - [ ] css 预处理器 sass less
-  - [ ] css modules
-  - [ ] postcss
+  - [ ] css 预处理器 css 预处理器 sass scss less stylus
+  - [ ] css modules 将 css 类名处理成哈希值
+  - [ ] postcss css 后处理器 postcss
   - [ ] css in js
   - [ ] 原子化 css tailwind windicss
 - [ ] 代码规范

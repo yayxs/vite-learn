@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import autoprefixer from 'autoprefixer'
 import path from 'path'
 // vite plugin
+import legacy from '@vitejs/plugin-legacy'
 import windi from 'vite-plugin-windicss'
 
 const variablePath = normalizePath(path.resolve('./src/variable.scss'))
@@ -14,7 +15,13 @@ function createRootStr() {
 }
 // gen plugins
 function createPlugins() {
-  const vitePlugins = [react(), windi()]
+  const vitePlugins = [
+    react(),
+    legacy({
+      targets: ['defaults', 'not IE 11']
+    }),
+    windi()
+  ]
   return vitePlugins
 }
 // 共享配置 别名
