@@ -97,20 +97,6 @@ vite 为 Vue
 - vue 2.7
 - vue <2.7
 
-## 完整的生态
-
-- [ ] css
-  - [ ] 原生 css
-  - [ ] css 预处理器 css 预处理器 sass scss less stylus
-  - [ ] css modules 将 css 类名处理成哈希值
-  - [ ] postcss css 后处理器 postcss
-  - [ ] css in js
-  - [ ] 原子化 css tailwind windicss
-- [ ] 代码规范
-  - [ ] eslint
-  - [ ] prettier
-  - [ ] Stylelint
-
 ## 名词
 
 | 名词 |                                              |

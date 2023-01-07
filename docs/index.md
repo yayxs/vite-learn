@@ -41,7 +41,7 @@ pnpm run dev
 
 控制台网络查看全部
 
-![element-plus-vite-starter控制台图]
+![element-plus-vite-starter控制台图](https://cdn.statically.io/gh/yayxs/picture-image@master/vite-learn/202301072054112.png)
 
 - 从类型看：加载的是 `script`、`png`、`svg+xml` ……
 - 从状态看：有 101、200、304
@@ -161,7 +161,7 @@ app.mount('#app')
 
 css 文件，关注一下 大小来自 `disk cache`
 
-![线上的css图片]
+![线上的css图片](https://cdn.statically.io/gh/yayxs/picture-image@master/vite-learn/202301072056542.png)
 
 加载 js 文件
 
@@ -169,7 +169,7 @@ css 文件，关注一下 大小来自 `disk cache`
 https://域名/这个是在服务器的二级路径/assets/dayjs.min.bfb4d8cf.js
 ```
 
-![线上的JS加载图片]
+![线上的JS加载图片](https://cdn.statically.io/gh/yayxs/picture-image@master/vite-learn/202301072057146.png)
 
 可以看到线上的 js 加载的文件没有那么多，能得到一个结论，控制台的请求日志，线上的环境没有开发环境的加载的资源多。还有 `vite` 是稳稳的上生产的，问题不大
 
@@ -293,14 +293,14 @@ const envConfig = defineConfig({
   // 用什么插件
   plugins: [
     typescript({
-      tsconfig: path.resolve(__dirname, 'src/client/tsconfig.json')
-    })
+      tsconfig: path.resolve(__dirname, 'src/client/tsconfig.json'),
+    }),
   ],
   // 输出什么
   output: {
     file: path.resolve(__dirname, 'dist/client', 'env.mjs'),
-    sourcemap: true
-  }
+    sourcemap: true,
+  },
 })
 ```
 
@@ -332,17 +332,17 @@ const rollupOptions = {
     // 输出不同的格式可以是个数组
     {
       file: 'output-iife.js',
-      format: 'iife' // 浏览器
+      format: 'iife', // 浏览器
     },
     {
       file: 'output-esm',
-      format: 'esm' // 浏览器esm
+      format: 'esm', // 浏览器esm
     },
     {
       file: 'output-cjs',
-      format: 'cjs'
-    }
-  ]
+      format: 'cjs',
+    },
+  ],
 }
 
 export default rollupOptions // 可以是一个对象
@@ -375,16 +375,16 @@ const entries = ['src/index.ts']
 ```js
 const plugins = [
   alias({
-    entries: [{ find: /^node:(.+)$/, replacement: '$1' }]
+    entries: [{ find: /^node:(.+)$/, replacement: '$1' }],
   }),
   resolve({
-    preferBuiltins: true
+    preferBuiltins: true,
   }),
   json(),
   commonjs(),
   esbuild({
-    target: 'node14'
-  })
+    target: 'node14',
+  }),
 ]
 ```
 
@@ -397,25 +397,25 @@ export default [
     output: [
       {
         file: input.replace('src/', 'dist/').replace('.ts', '.mjs'),
-        format: 'esm'
+        format: 'esm',
       },
       {
         file: input.replace('src/', 'dist/').replace('.ts', '.cjs'),
-        format: 'cjs'
-      }
+        format: 'cjs',
+      },
     ],
     external: [],
-    plugins
+    plugins,
   })),
   ...entries.map((input) => ({
     input,
     output: {
       file: input.replace('src/', '').replace('.ts', '.d.ts'),
-      format: 'esm'
+      format: 'esm',
     },
     external: [],
-    plugins: [dts({ respectExternal: true })]
-  }))
+    plugins: [dts({ respectExternal: true })],
+  })),
 ]
 ```
 
@@ -482,3 +482,152 @@ git clone https://github.com/patak-dev/vite-rollup-plugins # 获取一个带使�
 
 生产环境：vite 基于 rollup 打包
 开发阶段：不打包、开发模块按需编译
+
+## vite-starter
+
+```sh
+git clone https://github.com/yayxs/vite-starter.git
+```
+
+当我决定在公司用 vite 时候，还没具体看过“风险”。不过觉得问题不大，首先我会用终端起多个项目，首先想到怎么自定义开发服务器的 `port`。
+
+[https://cn.vitejs.dev/config/server-options.html#server-port](https://cn.vitejs.dev/config/server-options.html#server-port)
+
+```js
+    server: {
+      host: '0.0.0.0', // host 0.0.0.0 方便都能访问
+      port:2023,
+      proxy: {
+        '/api': {
+          target: VITE_APP_BASE_API,
+          changeOrigin: true
+        }
+      }
+    }
+```
+
+接着是，别名，兼容`vue2` 的方式，导入一个文件
+
+```js
+import echarts from '@/plugins/echarts/index.js'
+```
+
+可以这样配置
+
+```js
+ resolve: {
+      alias: {
+        '@': resolve(__dirname, '.', 'src')
+      }
+    },
+```
+
+还有一个值得注意的就是 `base` 这个，如果你的项目是 `https://www.a.com/hello/home`
+
+那么需要配置,就像这样
+
+```js
+ base: `/${VITE_APP_BASE_URL}/`,
+```
+
+不过值得注意的是，在你装载路由的时候，同样需要关注
+
+```js
+function getHistoryMode() {
+  const { VITE_APP_BASE_URL } = import.meta.env
+  return createWebHistory(`/${VITE_APP_BASE_URL}`)
+}
+```
+
+关于 `import.meta.env` 可以看 [https://cn.vitejs.dev/guide/env-and-mode.html#env-variables](https://cn.vitejs.dev/guide/env-and-mode.html#env-variables)
+
+还有在 vite 启动，装载 `css`
+
+```js
+scss: {
+  additionalData: `@use "./src/styles/element/index.scss" as *;`
+}
+```
+
+接着就是装载插件了，一般情况下，我们写个`function` , 用来创建插件
+
+```js
+export function createVitePlugins() {
+  const vitePlugins = [
+    vue(),
+    Components({
+      // allow auto load markdown components under `./src/components/`
+      extensions: ['vue', 'md'],
+      // allow auto import and register components used in markdown
+      include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass',
+        }),
+      ],
+    }),
+    DefineOptions(),
+    // see unocss.config.ts for config
+    Unocss({
+      presets: [
+        presetUno(),
+        presetAttributify(),
+        presetIcons({
+          scale: 1.2,
+          warn: true,
+        }),
+      ],
+      transformers: [transformerDirectives(), transformerVariantGroup()],
+    }),
+  ]
+  return vitePlugins
+}
+```
+
+关于插件的装载，可以参考上述主流的开源的项目。不过我们扩展的能力，比如原子化 css 或者第三方组件库，这个根据需要，想要了解方案细节的话还是需要看看相关的生态
+
+- [ ] css
+  - [ ] 原生 css
+  - [ ] css 预处理器 css 预处理器 sass scss less stylus
+  - [ ] css modules 将 css 类名处理成哈希值
+  - [ ] postcss css 后处理器 postcss
+  - [ ] css in js
+  - [ ] 原子化 css tailwind windicss
+- [ ] 代码规范
+  - [ ] eslint
+  - [ ] prettier
+  - [ ] Stylelint
+
+我觉的目前像 `掘金` 或者其他社区博客中有很多类似的帖子，怎么使用 `sass` 或者使用 `windicss` 等等。
+
+最后在 **打包的时候**
+
+```js
+  build: {
+      sourcemap: false,
+      chunkSizeWarningLimit: 4000,
+      outDir: VITE_APP_BASE_URL,
+      assetsDir: 'assets'
+    },
+
+```
+
+## 小结
+
+1、`vue3` 或者 `vite` 环境的项目，推荐一些新的插件，等等，这些开源项目中也是这么做的
+
+```json
+{
+  "recommendations": ["Vue.volar"]
+}
+```
+
+2、有关这次 `vite` 上线，没有我想象的“可怕”，模块比较少的缘故，vite 整体上次比较顺利，但在开发时候的体验和 `webpack` 大不同，一切顺利
+
+3、本篇说的，大致是我近 3 个月学习 vite 的路径，仍有很多内容还未用到，不过整体梳理了下，包括：
+
+- `vite-learn` 核心仓库 持续记录 学习 vite 的心得
+- `vite.config` 整理 vite 常见的配置
+- `vite-starter` 项目中是怎么使用的
+
+4、还有就是 `vite` 是偏工具性质的，重要的是理解 `模块化` 和 vite 的能力，和底层的架构 `rollup` + `esbuild`
