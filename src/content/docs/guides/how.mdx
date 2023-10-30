@@ -1,0 +1,23 @@
+---
+title: Vite如何做的
+---
+
+### 模块化
+
+基于原生的 ESM 实现模块加载
+
+### TypeScript
+
+- 使用 esbuild
+
+```ts
+/// <reference types="vite/client" />
+```
+
+```sh
+ "build": "tsc && vite build",
+```
+
+第三方库含有 cjs
+eslint
+兼容不支持原生 esm 的浏览器
